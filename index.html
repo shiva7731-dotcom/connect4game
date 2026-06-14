@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connect Four</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="game-wrapper">
+    <header class="game-header">
+      <h1 class="game-title">CONNECT <span class="accent">FOUR</span></h1>
+      <p class="game-subtitle">Deep Space Edition</p>
+    </header>
+
+    <div class="scoreboard">
+      <div id="card-p1" class="player-card red-card active">
+        <div class="player-chip red-chip"></div>
+        <div class="player-info">
+          <span class="player-label">Player 1</span>
+          <span id="score-p1" class="player-score">0</span>
+        </div>
+      </div>
+      
+      <div class="vs-text">VS</div>
+      
+      <div id="card-p2" class="player-card yellow-card">
+        <div class="player-info" style="text-align: right;">
+          <span class="player-label">Player 2</span>
+          <span id="score-p2" class="player-score">0</span>
+        </div>
+        <div class="player-chip yellow-chip"></div>
+      </div>
+    </div>
+
+    <div class="turn-banner">
+      <div id="turn-chip" class="turn-chip p1"></div>
+      <span id="turn-text">Player 1's Turn</span>
+    </div>
+
+    <div class="board-area">
+      <div id="preview-row" class="preview-row">
+        <div id="preview-disc" class="preview-disc p1"></div>
+      </div>
+      <div id="board" class="board"></div>
+    </div>
+
+    <div class="controls">
+      <button id="btn-restart" class="ctrl-btn">Restart Round</button>
+      <button id="btn-new" class="ctrl-btn ctrl-btn--alt">New Game</button>
+    </div>
+  </div>
+
+  <div id="modal-bg" class="modal-bg">
+    <div class="modal">
+      <div id="modal-icon" class="modal-icon"></div>
+      <h2 id="modal-heading" class="modal-heading"></h2>
+      <p id="modal-msg" class="modal-msg"></p>
+      <div class="modal-btns">
+        <button id="btn-again" class="ctrl-btn ctrl-btn--gold">Play Again</button>
+        <button id="btn-modal-new" class="ctrl-btn">Reset Scores</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+  <script src="ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,467 @@
+:root {
+  --bg:          #07091a;
+  --surface:     #0f1332;
+  --surface-hi:  #171d47;
+  --board:       #1458c3;
+  --board-edge:  #0e41a0;
+  --board-deep:  #0a2e78;
+  --hole:        #04050e;
+
+  --p1:          #e83245;
+  --p1-hi:       #ff6878;
+  --p1-glow:     rgba(232, 50, 69, 0.5);
+
+  --p2:          #f5c400;
+  --p2-hi:       #ffe566;
+  --p2-glow:     rgba(245, 196, 0, 0.5);
+
+  --text:        #e8eaf6;
+  --muted:       #7986b8;
+  --border:      rgba(255, 255, 255, 0.07);
+  --gap:         8px;
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Body ── */
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+/* Starfield background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255,255,255,0.03)  1px, transparent 1px);
+  background-size: 52px 52px, 26px 26px;
+  background-position: 0 0, 13px 13px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Game Wrapper ── */
+.game-wrapper {
+  position: relative;
+  z-index: 1;
+  width: min(520px, 100vw);
+  padding: 24px 16px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ── Header ── */
+.game-header {
+  text-align: center;
+}
+
+.game-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(2.2rem, 8vw, 3.2rem);
+  letter-spacing: 3px;
+  color: var(--text);
+  line-height: 1;
+}
+
+.game-title .accent {
+  color: var(--p2);
+  text-shadow: 0 0 30px var(--p2-glow), 0 0 60px var(--p2-glow);
+}
+
+.game-subtitle {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── Scoreboard ── */
+.scoreboard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.player-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 2px solid transparent;
+  border-radius: 16px;
+  padding: 15px 17px;
+  transition: border-color 0.28s ease, box-shadow 0.28s ease;
+}
+
+/* Active player cards glow with their color */
+.player-card.active.red-card {
+  border-color: var(--p1);
+  box-shadow: 0 0 22px var(--p1-glow);
+}
+
+.player-card.active.yellow-card {
+  border-color: var(--p2);
+  box-shadow: 0 0 22px var(--p2-glow);
+}
+
+.player-chip {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: box-shadow 0.28s ease;
+}
+
+.red-chip {
+  background: radial-gradient(circle at 33% 33%, var(--p1-hi), var(--p1));
+  box-shadow: 0 0 10px var(--p1-glow), inset 0 2px 4px rgba(255,255,255,0.2);
+}
+
+.yellow-chip {
+  background: radial-gradient(circle at 33% 33%, var(--p2-hi), var(--p2));
+  box-shadow: 0 0 10px var(--p2-glow), inset 0 2px 4px rgba(255,255,255,0.2);
+}
+
+.player-card.active .red-chip {
+  box-shadow: 0 0 18px var(--p1-glow), inset 0 2px 4px rgba(255,255,255,0.25);
+}
+
+.player-card.active .yellow-chip {
+  box-shadow: 0 0 18px var(--p2-glow), inset 0 2px 4px rgba(255,255,255,0.25);
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.player-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.player-score {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.vs-text {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.15rem;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+/* ── Turn Banner ── */
+.turn-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+  height: 24px;
+}
+
+.turn-chip {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  transition: background 0.22s, box-shadow 0.22s;
+}
+
+.turn-chip.p1 {
+  background: var(--p1);
+  box-shadow: 0 0 8px var(--p1-glow);
+}
+
+.turn-chip.p2 {
+  background: var(--p2);
+  box-shadow: 0 0 8px var(--p2-glow);
+}
+
+/* ── Board Area ── */
+.board-area {
+  width: 100%;
+}
+
+/* Preview row sits directly above the board */
+.preview-row {
+  height: 52px;
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+.preview-disc {
+  position: absolute;
+  top: 6px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transition: left 0.10s ease, opacity 0.15s ease;
+}
+
+.preview-disc.p1 {
+  background: radial-gradient(circle at 33% 33%, var(--p1-hi), var(--p1));
+  box-shadow: 0 0 16px var(--p1-glow);
+}
+
+.preview-disc.p2 {
+  background: radial-gradient(circle at 33% 33%, var(--p2-hi), var(--p2));
+  box-shadow: 0 0 16px var(--p2-glow);
+}
+
+/* ── The Board ── */
+.board {
+  background: var(--board);
+  border-radius: 18px;
+  border-bottom: 7px solid var(--board-deep);
+  border-right: 3px solid var(--board-edge);
+  border-left: 3px solid var(--board-edge);
+  padding: 10px;
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--gap);
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.6),
+    inset 0 3px 8px rgba(255, 255, 255, 0.08),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;          /* clips fly-disc until it enters the board */
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Cell (the hole) ── */
+.cell {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--hole);
+  box-shadow:
+    inset 0 4px 12px rgba(0, 0, 0, 0.7),
+    inset 0 1px 3px rgba(0, 0, 0, 0.5);
+  position: relative;
+  transition: background 0.15s ease;
+}
+
+/* Subtle highlight when hovering a column */
+.cell.hovered {
+  background: rgba(255, 255, 255, 0.045);
+}
+
+/* ── Placed Disc (lives inside the cell) ── */
+.disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.disc.p1 {
+  background: radial-gradient(circle at 33% 33%, var(--p1-hi), var(--p1));
+  box-shadow:
+    0 0 10px var(--p1-glow),
+    inset 0 2px 5px rgba(255, 255, 255, 0.25);
+}
+
+.disc.p2 {
+  background: radial-gradient(circle at 33% 33%, var(--p2-hi), var(--p2));
+  box-shadow:
+    0 0 10px var(--p2-glow),
+    inset 0 2px 5px rgba(255, 255, 255, 0.25);
+}
+
+/* Winning discs pulse */
+.disc.p1.win {
+  animation: pulse-p1 0.65s ease-in-out infinite alternate;
+}
+
+.disc.p2.win {
+  animation: pulse-p2 0.65s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-p1 {
+  from { box-shadow: 0 0 10px var(--p1-glow); }
+  to   { box-shadow: 0 0 32px rgba(232,50,69,0.95), 0 0 60px rgba(232,50,69,0.45); }
+}
+
+@keyframes pulse-p2 {
+  from { box-shadow: 0 0 10px var(--p2-glow); }
+  to   { box-shadow: 0 0 32px rgba(245,196,0,0.95), 0 0 60px rgba(245,196,0,0.45); }
+}
+
+/* ── Flying Disc (animation overlay, absolutely inside board) ── */
+.fly-disc {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.fly-disc.p1 {
+  background: radial-gradient(circle at 33% 33%, var(--p1-hi), var(--p1));
+  box-shadow: 0 0 16px var(--p1-glow);
+}
+
+.fly-disc.p2 {
+  background: radial-gradient(circle at 33% 33%, var(--p2-hi), var(--p2));
+  box-shadow: 0 0 16px var(--p2-glow);
+}
+
+/* ── Controls ── */
+.controls {
+  display: flex;
+  gap: 12px;
+}
+
+.ctrl-btn {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.3px;
+  border: 2px solid var(--border);
+  border-radius: 11px;
+  padding: 11px 24px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.12s;
+}
+
+.ctrl-btn:hover {
+  background: var(--surface-hi);
+  color: var(--text);
+}
+
+.ctrl-btn:active { transform: scale(0.97); }
+
+.ctrl-btn--alt {
+  background: var(--board);
+  color: var(--text);
+  border-color: var(--board-edge);
+}
+
+.ctrl-btn--alt:hover { background: var(--board-edge); }
+
+.ctrl-btn--gold {
+  background: var(--p2);
+  color: #07091a;
+  border-color: var(--p2);
+  box-shadow: 0 0 20px var(--p2-glow);
+}
+
+.ctrl-btn--gold:hover {
+  box-shadow: 0 0 32px var(--p2-glow);
+  transform: translateY(-1px);
+}
+
+/* ── Win / Draw Modal ── */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 5, 16, 0.86);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-bg.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 46px 38px;
+  text-align: center;
+  max-width: 310px;
+  width: 90%;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.65);
+  transform: scale(0.82) translateY(10px);
+  transition: transform 0.32s cubic-bezier(0.22, 0, 0.2, 1.4);
+}
+
+.modal-bg.open .modal {
+  transform: scale(1) translateY(0);
+}
+
+.modal-icon {
+  font-size: 3.8rem;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+.modal-heading {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2rem;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.modal-msg {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+}
+
+.modal-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.modal-btns .ctrl-btn {
+  width: 100%;
+  font-size: 0.95rem;
+  padding: 13px 28px;
+}
+
+/* ── Responsive tweaks for small screens ── */
+@media (max-width: 440px) {
+  .board   { gap: 5px; padding: 7px; border-radius: 14px; }
+  .game-title { letter-spacing: 1px; }
+  .player-card { padding: 12px 13px; }
+  .player-score { font-size: 1.65rem; }
+  .modal { padding: 36px 26px; }
+}
